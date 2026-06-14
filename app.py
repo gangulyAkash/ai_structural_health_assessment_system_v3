@@ -25,7 +25,8 @@ rca = st.selectbox(
 if st.button("Predict"):
 
     strength = model.predict(
-        [[upv,rebound,rca]])[0]
+        [[upv, rebound, rca]]
+    )[0]
 
     if strength < 30:
         grade = "M20"
@@ -35,38 +36,41 @@ if st.button("Predict"):
         grade = "M40"
 
     # IS 13311 Quality Classification
+    if upv > 4.5:
+        quality = "Excellent"
+    elif upv >= 3.5:
+        quality = "Good"
+    elif upv >= 3.0:
+        quality = "Medium"
+    else:
+        quality = "Poor"
 
-if upv > 4.5:
-    quality = "Excellent"
-elif upv >= 3.5:
-    quality = "Good"
-elif upv >= 3.0:
-    quality = "Medium"
-else:
-    quality = "Poor"
     # Structural Health Index
+    MAX_STRENGTH = 46.22
 
-MAX_STRENGTH = 46.22
+    shi = (strength / MAX_STRENGTH) * 100
 
-shi = (strength / MAX_STRENGTH) * 100
-
-if shi >= 90:
-    status = "HEALTHY"
-elif shi >= 75:
-    status = "MODERATE"
-elif shi >= 50:
-    status = "WARNING"
-else:
-    status = "CRITICAL"
+    if shi >= 90:
+        status = "HEALTHY"
+    elif shi >= 75:
+        status = "MODERATE"
+    elif shi >= 50:
+        status = "WARNING"
+    else:
+        status = "CRITICAL"
 
     st.success(
-        f"Predicted Strength = {strength:.2f} MPa")
+        f"Predicted Strength = {strength:.2f} MPa"
+    )
 
-    st.write("Concrete Grade:",grade)
-    st.write("Quality:",quality)
-    st.write("Structural Health Index:",f"{shi:.2f}%")
-    st.write("Status:",status)
+    st.write("Concrete Grade:", grade)
+    st.write("Quality:", quality)
+    st.write("Structural Health Index:", f"{shi:.2f}%")
+    st.write("Status:", status)
+
     if upv < 3.0:
-    st.error("⚠ Poor Concrete Quality Detected")
+        st.error("⚠ Poor Concrete Quality Detected")
+    elif upv < 3.5:
+        st.warning("⚠ Medium Quality Concrete")
 elif upv < 3.5:
     st.warning("⚠ Medium Quality Concrete")
