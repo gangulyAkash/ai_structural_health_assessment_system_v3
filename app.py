@@ -50,7 +50,7 @@ MAX_STRENGTH = 46.22
 
 shi = (strength / MAX_STRENGTH) * 100
 
-    if shi >= 90:
+if shi >= 90:
     status = "HEALTHY"
 elif shi >= 75:
     status = "MODERATE"
