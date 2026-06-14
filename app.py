@@ -34,28 +34,30 @@ if st.button("Predict"):
     else:
         grade = "M40"
 
-    if upv > 4.5:
-        quality = "Excellent"
-    elif upv > 3.5:
-        quality = "Good"
-    else:
-        quality = "Fair"
+    # IS 13311 Quality Classification
 
-    design_strength = float(
-        grade.replace("M",""))
+if upv > 4.5:
+    quality = "Excellent"
+elif upv >= 3.5:
+    quality = "Good"
+elif upv >= 3.0:
+    quality = "Medium"
+else:
+    quality = "Poor"
+    # Structural Health Index
 
-    shi = (
-        strength/design_strength
-    )*100
+MAX_STRENGTH = 46.22
 
-    if shi > 90:
-        status = "HEALTHY"
-    elif shi > 75:
-        status = "MODERATE"
-    elif shi > 50:
-        status = "WARNING"
-    else:
-        status = "CRITICAL"
+shi = (strength / MAX_STRENGTH) * 100
+
+    if shi >= 90:
+    status = "HEALTHY"
+elif shi >= 75:
+    status = "MODERATE"
+elif shi >= 50:
+    status = "WARNING"
+else:
+    status = "CRITICAL"
 
     st.success(
         f"Predicted Strength = {strength:.2f} MPa")
@@ -64,3 +66,7 @@ if st.button("Predict"):
     st.write("Quality:",quality)
     st.write("Structural Health Index:",f"{shi:.2f}%")
     st.write("Status:",status)
+    if upv < 3.0:
+    st.error("⚠ Poor Concrete Quality Detected")
+elif upv < 3.5:
+    st.warning("⚠ Medium Quality Concrete")
